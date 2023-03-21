@@ -1,18 +1,20 @@
-class Solution {
-public:
-    int f(int index, string &s,int n){
-        if(n==0) return 1;
-   		if(index>=5) return 0;
-   		int pick, notPick;
-   		pick= f(index, s, n-1);
-   		notPick= f(index+1, s, n);
-        return pick + notPick;
-    }
-    int countVowelStrings(int n) {
-        string s= "aeiou";
-        return f(0, s, n);
-        
-    }
-};
+class Solution{
+    public:
+int countVowelStrings(int n) {
 
+		string vowels= "aeiou";
+		vector<vector<int>> dp(5, vector<int>(n+1)); 
+		for(int i=0; i<5; ++i) dp[i][0]= 1;
+		for(int i=4; i>=0; --i){
+		  for(int j=1; j<=n; ++j){
+			int pick= 0, notPick= 0;
+			pick= dp[i][j-1];
+			if(i<4) notPick= dp[i+1][j];
+			dp[i][j]= pick+notPick;
+		  }
+		}
+
+		return dp[0][n]; 
+	}
+};
  
