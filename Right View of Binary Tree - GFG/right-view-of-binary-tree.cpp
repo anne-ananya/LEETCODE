@@ -40,21 +40,19 @@ struct Node
 class Solution
 {
     public:
-    void f(Node *root, int level, vector<int> &ds){
-        if(root==NULL){
-            return;
-        }
-        if(ds.size()==level)
-        ds.push_back(root->data);
-        f(root->right, level+1, ds);
-        f(root->left, level+1, ds);
+    void recursion(Node *root, int level, vector <int>&res){
+        if(root == NULL)
+        return;
+        if(res.size()== level)
+        res.push_back(root->data);
+        recursion(root->right, level+1, res);
+         recursion(root->left, level+1, res);
     }
-    //Function to return list containing elements of right view of binary tree.
     vector<int> rightView(Node *root)
     {
-       vector<int> ds;
-       f(root, 0, ds);
-       return ds;
+       vector <int> res;
+       recursion(root, 0, res);
+       return res; 
     }
 };
 
