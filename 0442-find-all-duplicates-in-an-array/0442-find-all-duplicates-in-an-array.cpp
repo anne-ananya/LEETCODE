@@ -1,19 +1,17 @@
 class Solution {
+    //O(N) 0(1)
 public:
     vector<int> findDuplicates(vector<int>& nums) {
-       int l=0, r=1;
-        sort(nums.begin(), nums.end());
         vector<int>ans;
-        while(l<r && r<nums.size()){
-            if(nums[l]==nums[r])
-            {
-                ans.push_back(nums[l]);
-                l++;
-                r++;
+      
+        for (int num : nums) {
+            if (nums[std::abs(num) - 1] < 0) {
+                ans.push_back(abs(num));
+            } else {
+                nums[abs(num) - 1] = -nums[abs(num) - 1];
             }
-            l++;
-            r++;
         }
+
         return ans;
     }
 };
