@@ -14,26 +14,31 @@ class Solution{
     //Function to find triplets with zero sum.
     bool findTriplets(int arr[], int n)
     { 
-         std::sort(arr, arr + n);
-        
-        for (int i = 0; i < n - 2; i++) {
-            int l = i + 1;
-            int r = n - 1;
+         if (n < 3) {
+        return false; 
+    }
 
-            while (l < r) {
-                int sum = arr[i] + arr[l] + arr[r];
+        sort(arr, arr+n);
+       for (int i = 0; i < n - 2; i++) {
+        if (i == 0 || (i > 0 && arr[i] != arr[i - 1])) { 
+            int target = -arr[i];
+            int left = i + 1;
+            int right = n - 1;
 
-                if (sum == 0)
-                    return true;
-
-                if (sum < 0)
-                    l++;
-                else
-                    r--;
+            while (left < right) {
+                int sum = arr[left] + arr[right];
+                if (sum == target) {
+                    return true; 
+                } else if (sum < target) {
+                    left++;
+                } else {
+                    right--;
+                }
             }
         }
-
-        return false;
+    }
+    
+    return false;
     }
 };
 
