@@ -1,36 +1,41 @@
 class Solution {
 public:
-    bool dfs(int node, vector<vector<int>>& adj, vector<bool>& visit, vector<bool>& inStack) {
-        if (inStack[node]) {
-            return true;
-        }
-        if (visit[node]) {
-            return false;
-        }
-        visit[node] = true;
-        inStack[node] = true;
-        for (auto neighbor : adj[node]) {
-            if (dfs(neighbor, adj, visit, inStack)) {
-                return true;
-            }
-        }
-        inStack[node] = false;
-        return false;
-    }
-
     bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
-        vector<vector<int>> adj(numCourses);
-        for (auto prerequisite : prerequisites) {
-            adj[prerequisite[1]].push_back(prerequisite[0]);
+        int V=numCourses;
+        vector<int> adj[V];
+        for(auto it :prerequisites)
+            adj[it[1]].push_back(it[0]);
+        
+        vector<int> inDegree(V, 0);
+        for(int i=0; i<V; i++)
+        {
+            for(auto it :adj[i])
+                inDegree[it]++;
         }
-
-        vector<bool> visit(numCourses);
-        vector<bool> inStack(numCourses);
-        for (int i = 0; i < numCourses; i++) {
-            if (dfs(i, adj, visit, inStack)) {
-                return false;
+        
+        queue<int> q;
+        for(int i=0; i<V; i++)
+        {
+            if(inDegree[i]==0)
+                q.push(i);
+        }
+        
+        vector<int> topo;
+        while(!q.empty())
+        {
+            int node=q.front();
+            q.pop();
+            topo.push_back(node);
+            
+            for(auto it :adj[node])
+            {
+                inDegree[it]--;
+                if(inDegree[it]==0)
+                    q.push(it);
             }
         }
-        return true;
+        
+        if(topo.size()==V) return true;
+        return false;
     }
 };
