@@ -1,30 +1,33 @@
 class Solution {
 public:
-    void help(int i, string &str, set<string>& words, string temp, vector<string>&ans){
-        if(i==str.size()){
-            temp.pop_back();
-            ans.push_back(temp);
-            return;
-        }
-        string s = "";
+    vector<string> wordBreak(string s, vector<string>& wordDict) {
+        unordered_set<string> wordSet(wordDict.begin(), wordDict.end());
+        int n = s.length();
+        unordered_map<int, vector<string>> memo;
+        return wordBreakMemo(s, 0, wordSet, memo);
+    }
 
-        for(int j=i; j<str.size(); j++){
-            s += str[j];
-            if(words.find(s) != words.end()){
-                s += ' ';
-                help(j+1,str,words,temp+s,ans);
-                s.pop_back();
+    vector<string> wordBreakMemo(const string& s, int start, const unordered_set<string>& wordSet, unordered_map<int, vector<string>>& memo) {
+        if (memo.count(start))
+            return memo[start];
+
+        vector<string> result;
+        if (start == s.length()) {
+            result.push_back("");
+            return result;
+        }
+
+        for (int end = start + 1; end <= s.length(); ++end) {
+            string word = s.substr(start, end - start);
+
+            if (wordSet.count(word)) {
+                vector<string> wordBreaks = wordBreakMemo(s, end, wordSet, memo);
+                for (const string& wb : wordBreaks) {
+                    result.push_back(word + (wb.empty() ? "" : " ") + wb);
+                }
             }
         }
-        return;
-    }
-    vector<string> wordBreak(string s, vector<string>& wordDict) {
-        set<string>st;
-        for(auto a: wordDict){
-            st.insert(a);
-        }
-         vector<string> ans;
-        help(0,s, st,"",ans);
-        return ans;
+        memo[start] = result;
+        return result;
     }
 };
